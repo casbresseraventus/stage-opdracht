@@ -4,9 +4,100 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
-		%sveltekit.head%
+	
 	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+	<body >
+		<div id="invullvak">
+			<label for="naam">vul de callsign in:</label><br>
+		</div>	
+		<div id="invullvak2">
+			<input type="text" id="naam" name="naam"><br>
+			<button type="button" onclick="verwerknummer()">Verwerk</button>
+		</div>
+
+		
+		<script>
+
+			function verwerknummer() {
+				var naam = document.getElementById("naam").value;
+				// Verwerk de waarde van het invulveld hier
+
+			const nummer = naam ;
+
+			fetch(`https://opensky-network.org/api/states/all?icao24=${nummer}`)
+				.then(response => response.json())
+				.then(data => {
+					if (data.states.length === 0) {
+						console.error('Geen resultaten gevonden voor deze vlucht');
+						return;
+					}
+
+					const flight = data.states[0][0];
+					const callsign = data.states[0][1];
+					const land = data.states [0][2];
+
+					let flightNumberElement = document.getElementById("flight-number");
+					flightNumberElement.textContent = flight;
+					let flightcallsignElement = document.getElementById("flight-callsing");
+					flightcallsignElement.textContent = callsign;
+					let flighttypeElemet = document.getElementById("land");
+					flighttypeElemet.textContent = land;
+					
+					
+					
+
+
+				})
+				.catch(error => console.error(error));
+			}
+		</script>
+		<div id="vluchtnumer">
+		<p>vlucht nummer:</p>
+		<p id="flight-number"></p>
+		</div>
+
+		<div id="callsign">
+		<p>callsign</p>
+		<p id="flight-callsing"></p>
+		</div>
+
+		<div id="landcss">
+		<p>welk land is het vliegtuig van </p>
+		<p id="land"></p>
+		</div>
+
+		<style>
+			#invullvak{
+				text-align: center;
+				
+				color:white;
+
+				background: #000000;
+				border-radius: 13px;
+			}
+			#invullvak2{
+				text-align: center;
+				color: black;
+			}
+			#callsign{
+				text-align: center;
+			}
+			#landcss{
+				text-align: center;
+			}
+			#vluchtnumer{
+				text-align: center;
+			}
+			body{
+				background-color: lightblue;
+			}
+
+
+
+
+
+		</style>
 	</body>
 </html>
+
+
